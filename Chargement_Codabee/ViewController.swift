@@ -16,6 +16,9 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        gradient()
+        
         ajouterAlveole(valeurX: 0.5, valeurY: 0.5, image: #imageLiteral(resourceName: "honeyComb_empty"))
         ajouterAlveole(valeurX: 0.5, valeurY: 1.5, image: #imageLiteral(resourceName: "honeyComb_empty"))
         ajouterAlveole(valeurX: 0.5, valeurY: 2.5, image: #imageLiteral(resourceName: "honeyComb_empty"))
@@ -33,10 +36,40 @@ class ViewController: UIViewController {
         
         label = UILabel(frame: CGRect(x: 100, y: 200, width: view.frame.width - 200, height: 50))
         label.text = "Chargement"
-        label.font = UIFont.boldSystemFont(ofSize: 30)
+        label.font = UIFont.boldSystemFont(ofSize: 20)
         label.adjustsFontSizeToFitWidth = true
         label.textColor = UIColor(red: 255 / 255, green: 204 / 255, blue: 0 / 255, alpha: 1)
         view.addSubview(label)
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { (t) in
+            if self.label.text != nil {
+                if self.label.text == "Chargement..." {
+                    self.label.text = "Chargement"
+                } else {
+                    self.label.text = (self.label.text!) + "."
+                }
+            }
+            
+            let alveole = self.alveoles[Int(arc4random_uniform(UInt32(self.alveoles.count)))]
+            if alveole.image == #imageLiteral(resourceName: "honeycomb_full") {
+                alveole.image = #imageLiteral(resourceName: "honeyComb_empty")
+            } else if alveole.image == #imageLiteral(resourceName: "honeyComb_empty") {
+                alveole.image = #imageLiteral(resourceName: "honeycomb_full")
+            } else {
+                alveole.image = #imageLiteral(resourceName: "honeyComb_bee")
+            }
+            
+            UIView.transition(with: alveole, duration: 0.5, options: .transitionFlipFromTop, animations: nil, completion: nil)
+            
+        }
+        
+        
+        
         
     }
 
@@ -54,6 +87,27 @@ class ViewController: UIViewController {
         alveoles.append(iv)
         
     }
+    
+    func gradient() {
+        let gr = CAGradientLayer()
+        gr.frame.size = view.frame.size
+        gr.colors = [UIColor.white.cgColor,UIColor.black.cgColor]
+        gr.startPoint = CGPoint(x: 0, y: 0)
+        gr.endPoint = CGPoint(x: 1, y: 1)
+        view.layer.addSublayer(gr)
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 }
 
